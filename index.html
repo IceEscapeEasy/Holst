@@ -1,24 +1,480 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Тест таблицы</title>
+    <meta charset="UTF-8">
+    <title>Математика: Подготовка к экзамену</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 36px;
+        }
+        
+        h1:before {
+            content: "🧮 ";
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 18px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th {
+            background: #4a6fa5;
+            color: white;
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 18px;
+            border: none;
+        }
+        
+        th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+        
+        th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+        
+        td {
+            padding: 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .main-row {
+            cursor: pointer;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .main-row:hover {
+            background: #f7fafc;
+        }
+        
+        .row-content {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .topic-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .topic-number {
+            background: #4a6fa5;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .topic-title {
+            font-weight: 600;
+            font-size: 18px;
+            color: #2d3748;
+        }
+        
+        .toggle-btn {
+            color: #4a6fa5;
+            font-size: 22px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .toggle-btn:hover {
+            background: #edf2f7;
+        }
+        
+        .toggle-btn.open {
+            transform: rotate(180deg);
+            background: #e2e8f0;
+        }
+        
+        .submenu {
+            background: #f8fbff;
+            display: none;
+            padding: 0;
+        }
+        
+        .submenu-content {
+            padding: 25px 20px 25px 85px;
+        }
+        
+        .subtopic {
+            padding: 12px 20px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #4a6fa5;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .subtopic:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .subtopic-icon {
+            color: #4a6fa5;
+            font-size: 20px;
+        }
+        
+        .subtopic-text {
+            font-size: 16px;
+            color: #2d3748;
+        }
+        
+        .status {
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .status-new {
+            background: #fff5f5;
+            color: #c53030;
+        }
+        
+        .status-progress {
+            background: #feebc8;
+            color: #d69e2e;
+        }
+        
+        .status-done {
+            background: #c6f6d5;
+            color: #276749;
+        }
+        
+        .progress-cell {
+            padding: 20px;
+        }
+        
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .progress-bar {
+            width: 150px;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4a6fa5, #667eea);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 1.5s ease-in-out;
+        }
+        
+        .progress-text {
+            font-weight: 600;
+            color: #4a6fa5;
+            min-width: 45px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+            color: #718096;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            th, td .row-content, .progress-cell {
+                padding: 15px 10px;
+            }
+            
+            .submenu-content {
+                padding-left: 60px;
+            }
+            
+            .progress-bar {
+                width: 100px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Подготовка к экзамену по математике</h1>
+        <p class="subtitle">Интерактивная таблица прогресса • Кликните на тему для раскрытия подтем</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th width="50%">Тема задания</th>
+                    <th width="25%">Статус</th>
+                    <th width="25%">Прогресс</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Строка 1 -->
+                <tr class="main-row" id="row1">
+                    <td>
+                        <div class="row-content">
+                            <div class="topic-info">
+                                <div class="topic-number">1</div>
+                                <div class="topic-title">Простейшие текстовые задачи</div>
+                            </div>
+                            <div class="toggle-btn">▼</div>
+                        </div>
+                    </td>
+                    <td class="status status-done">Изучено</td>
+                    <td class="progress-cell">
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress1"></div>
+                            </div>
+                            <span class="progress-text">100%</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="submenu" id="submenu1">
+                    <td colspan="3">
+                        <div class="submenu-content">
+                            <div class="subtopic">
+                                <span class="subtopic-icon">📝</span>
+                                <span class="subtopic-text">Задачи на проценты</span>
+                            </div>
+                            <div class="subtopic">
+                                <span class="subtopic-icon">📝</span>
+                                <span class="subtopic-text">Задачи на движение</span>
+                            </div>
+                            <div class="subtopic">
+                                <span class="subtopic-icon">📝</span>
+                                <span class="subtopic-text">Задачи на работу</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- Строка 2 -->
+                <tr class="main-row" id="row2">
+                    <td>
+                        <div class="row-content">
+                            <div class="topic-info">
+                                <div class="topic-number">2</div>
+                                <div class="topic-title">Величины и значения</div>
+                            </div>
+                            <div class="toggle-btn">▼</div>
+                        </div>
+                    </td>
+                    <td class="status status-progress">В процессе</td>
+                    <td class="progress-cell">
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress2"></div>
+                            </div>
+                            <span class="progress-text">60%</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="submenu" id="submenu2">
+                    <td colspan="3">
+                        <div class="submenu-content">
+                            <div class="subtopic">
+                                <span class="subtopic-icon">📏</span>
+                                <span class="subtopic-text">Единицы измерения</span>
+                            </div>
+                            <div class="subtopic">
+                                <span class="subtopic-icon">⚖️</span>
+                                <span class="subtopic-text">Сравнение величин</span>
+                            </div>
+                            <div class="subtopic">
+                                <span class="subtopic-icon">🔄</span>
+                                <span class="subtopic-text">Перевод единиц</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- Строка 3 (с подменю как вы просили) -->
+                <tr class="main-row" id="row3">
+                    <td>
+                        <div class="row-content">
+                            <div class="topic-info">
+                                <div class="topic-number">3</div>
+                                <div class="topic-title">Графики, диаграммы, таблицы</div>
+                            </div>
+                            <div class="toggle-btn">▼</div>
+                        </div>
+                    </td>
+                    <td class="status status-new">Не начато</td>
+                    <td class="progress-cell">
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress3"></div>
+                            </div>
+                            <span class="progress-text">0%</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="submenu" id="submenu3">
+                    <td colspan="3">
+                        <div class="submenu-content">
+                            <!-- Графики -->
+                            <div class="subtopic" onclick="toggleSubtopic('graphs')" style="cursor: pointer;">
+                                <span class="subtopic-icon">📈</span>
+                                <span class="subtopic-text">Графики</span>
+                                <span style="margin-left: auto; color: #4a6fa5;">▶</span>
+                            </div>
+                            <div id="subtopic-graphs" class="subtopic" style="display: none; margin-left: 40px; background: #f0f7ff; font-size: 14px;">
+                                <span class="subtopic-text">• Линейные графики<br>• Квадратичные функции<br>• Показательные функции</span>
+                            </div>
+                            
+                            <!-- Диаграммы -->
+                            <div class="subtopic" onclick="toggleSubtopic('diagrams')" style="cursor: pointer;">
+                                <span class="subtopic-icon">📊</span>
+                                <span class="subtopic-text">Диаграммы</span>
+                                <span style="margin-left: auto; color: #4a6fa5;">▶</span>
+                            </div>
+                            <div id="subtopic-diagrams" class="subtopic" style="display: none; margin-left: 40px; background: #f0f7ff; font-size: 14px;">
+                                <span class="subtopic-text">• Круговые диаграммы<br>• Столбчатые диаграммы<br>• Гистограммы</span>
+                            </div>
+                            
+                            <!-- Таблицы -->
+                            <div class="subtopic" onclick="toggleSubtopic('tables')" style="cursor: pointer;">
+                                <span class="subtopic-icon">📋</span>
+                                <span class="subtopic-text">Таблицы</span>
+                                <span style="margin-left: auto; color: #4a6fa5;">▶</span>
+                            </div>
+                            <div id="subtopic-tables" class="subtopic" style="display: none; margin-left: 40px; background: #f0f7ff; font-size: 14px;">
+                                <span class="subtopic-text">• Таблицы данных<br>• Таблицы вероятностей<br>• Таблицы функций</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="footer">
+            Обновлено: <span id="current-date"></span> • 
+            <span id="completed-count">0</span> из 3 тем завершено
+        </div>
+    </div>
 
-<h1>Тест GitHub Pages</h1>
-
-<table border="1">
-    <tr>
-        <td>Ячейка 1</td>
-        <td>Ячейка 2</td>
-    </tr>
-    <tr>
-        <td>Ячейка 3</td>
-        <td>Ячейка 4</td>
-    </tr>
-</table>
-
-<p>Если вы видите эту таблицу — GitHub Pages работает!</p>
-
+    <script>
+        // Установка текущей даты
+        document.getElementById('current-date').textContent = 
+            new Date().toLocaleDateString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        
+        // Анимация прогресс-баров
+        setTimeout(() => {
+            document.getElementById('progress1').style.width = '100%';
+            document.getElementById('progress2').style.width = '60%';
+            document.getElementById('progress3').style.width = '0%';
+        }, 500);
+        
+        // Подсчёт завершённых тем
+        function updateCompletedCount() {
+            const completed = document.querySelectorAll('.status-done').length;
+            document.getElementById('completed-count').textContent = completed;
+        }
+        updateCompletedCount();
+        
+        // Обработчики для раскрытия/скрытия подменю
+        document.querySelectorAll('.main-row').forEach(row => {
+            row.addEventListener('click', function() {
+                const rowId = this.id.replace('row', '');
+                const submenu = document.getElementById(`submenu${rowId}`);
+                const toggleBtn = this.querySelector('.toggle-btn');
+                
+                if (submenu) {
+                    const isVisible = submenu.style.display === 'table-row';
+                    submenu.style.display = isVisible ? 'none' : 'table-row';
+                    toggleBtn.classList.toggle('open', !isVisible);
+                }
+            });
+        });
+        
+        // Функция для подподменю (3-я тема)
+        function toggleSubtopic(id) {
+            const element = document.getElementById(`subtopic-${id}`);
+            const icon = event.currentTarget.querySelector('span:last-child');
+            
+            if (element.style.display === 'none') {
+                element.style.display = 'block';
+                icon.textContent = '▼';
+            } else {
+                element.style.display = 'none';
+                icon.textContent = '▶';
+            }
+        }
+        
+        // Изначально раскрываем первую тему для примера
+        setTimeout(() => {
+            document.getElementById('submenu1').style.display = 'table-row';
+            document.querySelector('#row1 .toggle-btn').classList.add('open');
+        }, 1000);
+    </script>
 </body>
 </html>
